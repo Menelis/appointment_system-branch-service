@@ -1,0 +1,30 @@
+infrastructure:
+  DB:
+    USERNAME: appointment_service_user
+    PASSWORD: appointment_service_user
+spring:
+  cloud:
+    config:
+      enabled: false
+  datasource:
+    url: jdbc:postgresql://localhost:5432/appointment_branch_service_dev
+    username: ${infrastructure.DB.USERNAME}
+    password: ${infrastructure.DB.PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+springdoc:
+  api-docs:
+    path: /branch/v3/api-docs
+  swagger-ui:
+    path: /branch/swagger-ui.html
+    operations-sorter: method
+    doc-expansion: none
+
+server:
+  port: 9002
