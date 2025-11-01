@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "branch_daily_slot")
+@Table(name = "branch_daily_slots")
 public class BranchDailySlot extends BaseEntity {
 
     @Id
