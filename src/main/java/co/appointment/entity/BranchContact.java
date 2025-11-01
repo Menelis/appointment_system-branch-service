@@ -1,7 +1,14 @@
 package co.appointment.entity;
 
 import co.appointment.shared.entity.base.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,26 +18,19 @@ import lombok.Setter;
 @Getter
 public class BranchContact extends BaseEntity {
 
-    @EmbeddedId
-    private BranchContactKey id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
-    @MapsId("branchId")
+    @JoinColumn(name = "branch_id")
     private Branch branch;
 
     @ManyToOne
-    @MapsId("contactTypeId")
-    private ContactType contactType;
+    @JoinColumn(name = "contact_type_id")
+    private ContactType type;
 
     @Column(nullable = false)
     private String contact;
 
-    public BranchContact() {}
-
-    public BranchContact(final Branch branch, final ContactType contactType, final String contact, final BranchContactKey id) {
-        this.branch = branch;
-        this.contactType = contactType;
-        this.contact = contact;
-        this.id = id;
-    }
 }
