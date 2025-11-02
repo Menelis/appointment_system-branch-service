@@ -1,7 +1,6 @@
 package co.appointment.controller;
 
 import co.appointment.dto.SlotDTO;
-import co.appointment.entity.Slot;
 import co.appointment.payload.request.NewSlotRequest;
 import co.appointment.payload.request.UpdateSlotRequest;
 import co.appointment.service.SlotService;
