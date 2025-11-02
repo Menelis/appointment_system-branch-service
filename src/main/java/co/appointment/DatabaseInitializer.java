@@ -17,7 +17,7 @@ public class DatabaseInitializer implements CommandLineRunner {
     private final ContactTypeRepository contactTypeRepository;
     private final SlotRepository slotRepository;
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         seedContactTypes();
         seedSlots();
     }
