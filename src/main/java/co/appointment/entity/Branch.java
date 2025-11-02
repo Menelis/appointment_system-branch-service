@@ -17,7 +17,7 @@ import lombok.Setter;
 public class Branch extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(nullable = false, length = 100)
     private String name;

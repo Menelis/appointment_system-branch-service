@@ -28,7 +28,7 @@ public class BranchContact extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "contact_type_id")
-    private ContactType type;
+    private ContactType contactType;
 
     @Column(nullable = false)
     private String contact;

@@ -25,4 +25,11 @@ public class Slot extends BaseEntity {
 
     @Column(nullable = false, length = 20, name = "slot_end")
     private String slotEnd;
+
+    public Slot() {}
+
+    public Slot(String slotStart, String slotEnd) {
+        this.slotStart = slotStart;
+        this.slotEnd = slotEnd;
+    }
 }

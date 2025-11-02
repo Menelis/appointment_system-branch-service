@@ -1,7 +1,14 @@
 package co.appointment.entity;
 
 import co.appointment.shared.entity.base.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,4 +33,7 @@ public class BranchDailySlot extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "slot_id", nullable = false)
     public Slot slot;
+
+    @Column(name = "is_enabled", nullable = false)
+    public Boolean isEnabled = true;
 }
