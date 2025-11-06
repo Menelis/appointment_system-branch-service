@@ -40,7 +40,7 @@ public class BranchControllerV1 {
     public ResponseEntity<ApiResponse<BranchDTO>> getBranchById(@PathVariable final Integer id) {
         return branchService.getBranchById(id);
     }
-    @PostMapping("/create")
+    @PostMapping("/admin/create")
     public ResponseEntity<ApiResponse<BranchDTO>> createBranch(@RequestBody @Valid final NewBranchRequest branchRequest) {
         BranchDTO branchDTO = branchService.createBranch(branchRequest);
         if(branchDTO == null) {
@@ -49,12 +49,12 @@ public class BranchControllerV1 {
         return ResponseEntity.ok(new ApiResponse<>("Branch has been created successfully."));
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/admin/update/{id}")
     public ResponseEntity<ApiResponse<BranchDTO>> updateBranch(@PathVariable("id") final Integer id, @RequestBody final UpdateBranchRequest branchRequest) {
         return branchService.updateBranch(id, branchRequest);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admin/delete/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteBranch(@PathVariable final Integer id) {
         return branchService.deleteBranch(id);
     }

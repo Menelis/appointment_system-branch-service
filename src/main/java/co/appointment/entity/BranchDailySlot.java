@@ -30,10 +30,6 @@ public class BranchDailySlot extends BaseEntity {
     @JoinColumn(name = "appointment_date_id", nullable = false)
     public AppointmentDate appointmentDate;
 
-    @ManyToOne
-    @JoinColumn(name = "slot_id", nullable = false)
-    public Slot slot;
-
     @Column(name = "is_enabled", nullable = false)
     public Boolean isEnabled = true;
 }

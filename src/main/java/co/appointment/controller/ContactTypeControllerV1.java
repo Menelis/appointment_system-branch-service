@@ -40,16 +40,16 @@ public class ContactTypeControllerV1 {
     public ResponseEntity<ApiResponse<ContactTypeDTO>> getContactTypeById(@PathVariable final Integer id) {
         return contactTypeService.getContactTypeById(id);
     }
-    @PostMapping("/create")
+    @PostMapping("/admin/create")
     public ResponseEntity<ApiResponse<ContactTypeDTO>> createContactType(@RequestBody @Valid final NewContactTypeRequest contactTypeRequest) {
         return contactTypeService.createContactType(contactTypeRequest);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/admin/update/{id}")
     public ResponseEntity<ApiResponse<ContactTypeDTO>> updateContactType(@PathVariable("id") final Integer id, @RequestBody @Valid final UpdateContactTypeRequest updateContactTypeRequest) {
         return contactTypeService.updateContactType(id, updateContactTypeRequest);
     }
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admin/delete/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteContactType(@PathVariable("id") final Integer id) {
         return contactTypeService.deleteContactType(id);
     }

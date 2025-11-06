@@ -40,18 +40,18 @@ public class BranchContactControllerV1 {
         return branchContactService.getBranchContactById(id);
     }
 
-    @PostMapping("/create")
+    @PostMapping("/admin/create")
     public ResponseEntity<ApiResponse<BranchContactDTO>> createBranchContact(@RequestBody @Valid final NewBranchContactRequest  request) {
         return branchContactService.createBranchContact(request);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/admin/update/{id}")
     public ResponseEntity<ApiResponse<BranchContactDTO>> updateBranchContact(@PathVariable("id") final Integer id,
                                                                              @RequestBody @Valid final UpdateBranchContactRequest request) {
         return branchContactService.updateBranchContact(id, request);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admin/delete/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteBranchContact(@PathVariable("id") final Integer id) {
         return branchContactService.deleteBranchContact(id);
     }

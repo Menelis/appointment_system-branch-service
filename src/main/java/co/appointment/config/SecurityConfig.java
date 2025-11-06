@@ -1,18 +1,14 @@
 package co.appointment.config;
 
-import co.appointment.shared.constant.RoleConstants;
 import co.appointment.shared.model.CorsSettings;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -30,19 +26,9 @@ public class SecurityConfig {
         return http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
-                .exceptionHandling(exceptionHandler ->
-                        exceptionHandler.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
-                .authorizeHttpRequests(authorizeRequests ->
-                        authorizeRequests.requestMatchers(appConfigProperties.getWhiteList())
-                                .permitAll()
-                                //Only admins can create,update and delete
-                                .requestMatchers(HttpMethod.POST).hasRole(RoleConstants.ADMIN_ROLE)
-                                .requestMatchers(HttpMethod.PUT).hasRole(RoleConstants.ADMIN_ROLE)
-                                .requestMatchers(HttpMethod.DELETE).hasRole(RoleConstants.ADMIN_ROLE)
-                                .anyRequest().authenticated())
+                .authorizeHttpRequests(authorizeRequests -> authorizeRequests.anyRequest().permitAll())
                 .build();
     }
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource(){
         CorsSettings cors = appConfigProperties.getCors();
