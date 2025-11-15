@@ -1,5 +1,6 @@
 package co.appointment.config;
 
+import co.appointment.shared.constant.RoleConstants;
 import co.appointment.shared.model.CorsSettings;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +27,9 @@ public class SecurityConfig {
         return http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorizeRequests -> authorizeRequests.anyRequest().permitAll())
+                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        .requestMatchers("/admin/**").hasAnyRole(RoleConstants.ADMIN_ROLE)
+                        .anyRequest().permitAll())
                 .build();
     }
     @Bean
