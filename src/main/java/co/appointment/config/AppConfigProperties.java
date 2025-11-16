@@ -11,4 +11,5 @@ public class AppConfigProperties {
     private OpenApiSettings openApi = new OpenApiSettings();
     private String[] whiteList;
     private CorsSettings cors = new CorsSettings();
+    private String[] adminRoutes = {};
 }
