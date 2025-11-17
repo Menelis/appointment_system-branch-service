@@ -33,6 +33,8 @@
 		<springdoc-openapi-starter-webmvc-ui.version>2.8.13</springdoc-openapi-starter-webmvc-ui.version>
 		<lombok.version>1.18.42</lombok.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
+		<grpc.version>1.76.0</grpc.version>
+		<grpc-server-spring-boot-starter.version>3.1.0.RELEASE</grpc-server-spring-boot-starter.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -82,6 +84,23 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.devh</groupId>
+			<artifactId>grpc-server-spring-boot-starter</artifactId>
+			<version>${grpc-server-spring-boot-starter.version}</version>
+		</dependency>
+		<!-- Grpc -->
+		<dependency>
+			<groupId>io.grpc</groupId>
+			<artifactId>grpc-api</artifactId>
+			<version>${grpc.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.grpc</groupId>
+			<artifactId>grpc-services</artifactId>
+			<version>${grpc.version}</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
