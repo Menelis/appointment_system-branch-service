@@ -12,4 +12,7 @@ public class BranchDTO {
     private String city;
     private String province;
     private String postalCode;
+    private String email;
+    private String faxNo;
+    private String landLine;
 }

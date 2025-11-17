@@ -1,20 +1,21 @@
 package co.appointment.entity;
 
 import co.appointment.shared.entity.base.BaseEntity;
-import jakarta.persistence.Table;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import jakarta.persistence.Id;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "branches")
+@Table(name = "branch")
 @Getter
 @Setter
 public class Branch extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -40,4 +41,12 @@ public class Branch extends BaseEntity {
     @Column(nullable = false, length = 10, name = "postal_code")
     private String postalCode;
 
+    @Column(nullable = false, length = 100, name = "email_address")
+    private String email;
+
+    @Column(nullable = false, length = 50, name = "fax_no")
+    private String faxNo;
+
+    @Column(nullable = false, length = 50, name = "land_line")
+    private String landLine;
 }

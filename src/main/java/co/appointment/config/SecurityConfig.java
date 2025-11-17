@@ -1,8 +1,6 @@
 package co.appointment.config;
 
 import co.appointment.shared.constant.RoleConstants;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -15,7 +13,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @Profile("!test")
 @Configuration
 @EnableWebSecurity
-@Slf4j
 public class SecurityConfig {
 
     @Bean
