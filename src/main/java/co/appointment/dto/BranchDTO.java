@@ -9,8 +9,8 @@ public class BranchDTO {
     private String streetNo;
     private String addressLine1;
     private String addressLine2;
-    private String city;
-    private String province;
+    private CityDTO city;
+    private ProvinceDTO province;
     private String postalCode;
     private String email;
     private String faxNo;

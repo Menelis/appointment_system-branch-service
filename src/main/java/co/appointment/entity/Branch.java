@@ -4,9 +4,12 @@ import co.appointment.shared.entity.base.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Column;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.FetchType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,11 +35,13 @@ public class Branch extends BaseEntity {
     @Column(name = "address_line_2")
     private String addressLine2;
 
-    @Column(nullable = false, length = 100)
-    private String city;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city_id", nullable = false)
+    private City city;
 
-    @Column(nullable = false, length = 100)
-    private String province;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "province_id", nullable = false)
+    private Province province;
 
     @Column(nullable = false, length = 10, name = "postal_code")
     private String postalCode;
@@ -44,7 +49,7 @@ public class Branch extends BaseEntity {
     @Column(nullable = false, length = 100, name = "email_address")
     private String email;
 
-    @Column(nullable = false, length = 50, name = "fax_no")
+    @Column(length = 50, name = "fax_no")
     private String faxNo;
 
     @Column(nullable = false, length = 50, name = "land_line")

@@ -18,21 +18,23 @@ public class BranchGrcpService extends BranchServiceGrpc.BranchServiceImplBase {
     @Override
     public void processBranchById(GetBranchByIdRequest request, StreamObserver<GetBranchResponse> responseObserver) {
         Branch branch = branchRepository.findById(request.getId()).orElseThrow(() -> new RuntimeException("No Branch exists with id: "+ request.getId()));
-        GetBranchResponse response = GetBranchResponse.newBuilder()
+        GetBranchResponse.Builder builder = GetBranchResponse.newBuilder()
                 .setId(branch.getId())
                 .setName(branch.getName())
                 .setStreetNo(branch.getStreetNo())
                 .setAddressLine1(branch.getAddressLine1())
                 .setAddressLine2(branch.getAddressLine2())
-                .setCity(branch.getCity())
-                .setProvince(branch.getProvince())
                 .setPostalCode(branch.getPostalCode())
                 .setEmailAddress(branch.getEmail())
                 .setFaxNumber(branch.getFaxNo())
-                .setLandLine(branch.getLandLine())
-                .build();
-
-        responseObserver.onNext(response);
+                .setLandLine(branch.getLandLine());
+        if(branch.getProvince() != null) {
+            builder.setProvince(branch.getProvince().getName());
+        }
+        if(branch.getCity() != null) {
+            builder.setCity(branch.getCity().getName());
+        }
+        responseObserver.onNext(builder.build());
         responseObserver.onCompleted();
     }
 }
