@@ -18,7 +18,7 @@ import java.util.List;
 public class CityControllerV1 {
     private final CityService cityService;
 
-    @GetMapping("/admin/get-cities-by-province-id/{provinceId}")
+    @GetMapping("/get-cities-by-province-id/{provinceId}")
     public ResponseEntity<ApiResponse<List<CityDTO>>> getAllCities(@PathVariable(name = "provinceId")final int provinceId) {
         return ResponseEntity.ok(new ApiResponse<>(cityService.getCitiesByProvinceId(provinceId)));
     }

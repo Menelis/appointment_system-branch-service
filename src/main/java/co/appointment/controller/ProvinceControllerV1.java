@@ -18,7 +18,7 @@ import java.util.List;
 public class ProvinceControllerV1 {
     private final ProvinceService provinceService;
 
-    @GetMapping("/admin/get-all")
+    @GetMapping("/get-all")
     public ResponseEntity<ApiResponse<List<ProvinceDTO>>> getAllProvinces() {
         return ResponseEntity.ok(new ApiResponse<>(provinceService.getAllProvinces()));
     }
