@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/v1/branch")
@@ -29,10 +31,19 @@ public class BranchControllerV1 {
     private final BranchService branchService;
 
     @GetMapping
+    public ResponseEntity<ApiResponse<List<BranchDTO>>> getAllBranches() {
+        return ResponseEntity.ok(new ApiResponse<>(branchService.getAllBranches()));
+    }
+    @GetMapping("/getBranchesByProvinceIdAndCityId/{provinceId}/{cityId}")
+    public ResponseEntity<ApiResponse<List<BranchDTO>>> getAllBranchesByProvinceId(@PathVariable(name = "provinceId") final int provinceId,
+                                                                                   @PathVariable(name = "cityId") final int cityId) {
+        return ResponseEntity.ok(new ApiResponse<>(branchService.getBranchesByProvinceId(provinceId, cityId)));
+    }
+    @GetMapping("/get-paginated-branches")
     public ResponseEntity<ApiResponse<Page<BranchDTO>>> getAllBranches(
                                                                  @RequestParam(name = SharedConstants.PAGE_NUMBER_PARAMETER_NAME, defaultValue = SharedConstants.PAGE_NUMBER_DEFAULT_VALUE) final int pageNumber,
                                                                  @RequestParam(name = SharedConstants.PAGE_SIZE_PARAMETER_NAME, defaultValue = SharedConstants.PAGE_SIZE_DEFAULT_VALUE) final int pageSize) {
-        Page<BranchDTO> pagedBranches = branchService.getAllBranches(pageNumber, pageSize);
+        Page<BranchDTO> pagedBranches = branchService.getPagedBranches(pageNumber, pageSize);
 
         return ResponseEntity.ok(new ApiResponse<>(pagedBranches));
     }

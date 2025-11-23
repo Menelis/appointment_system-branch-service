@@ -9,7 +9,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.FetchType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,17 +28,17 @@ public class Branch extends BaseEntity {
     @Column(nullable = false, length = 100, name = "street_no")
     private String streetNo;
 
-    @Column(nullable = false, name = "address_line_1")
+    @Column(name = "address_line_1")
     private String addressLine1;
 
     @Column(name = "address_line_2")
     private String addressLine2;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "city_id", nullable = false)
     private City city;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "province_id", nullable = false)
     private Province province;
 

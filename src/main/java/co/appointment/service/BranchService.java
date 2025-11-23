@@ -25,7 +25,21 @@ public class BranchService {
     private final BranchRepository branchRepository;
     private final BranchToDTOMapper branchToDTOMapper;
 
-    public Page<BranchDTO> getAllBranches(final int page, final int pageSize) {
+    public List<BranchDTO> getAllBranches() {
+        return branchRepository.findAll()
+                .stream()
+                .map(branchToDTOMapper::toDTO)
+                .toList();
+    }
+    public List<BranchDTO> getBranchesByProvinceId(final int provinceId,
+                                                   final int cityId) {
+        return this.branchRepository.findAllByProvinceIdAndCityId(provinceId, cityId)
+                .stream()
+                .map(branchToDTOMapper::toDTO)
+                .toList();
+    }
+
+    public Page<BranchDTO> getPagedBranches(final int page, final int pageSize) {
         Page<Branch> branches = branchRepository.findAll(ObjectUtils.getPageable(page, pageSize));
 
         List<BranchDTO> content = branches.stream()
