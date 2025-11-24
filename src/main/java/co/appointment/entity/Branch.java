@@ -9,13 +9,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.EqualsAndHashCode;
+import lombok.Data;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "branch")
-@Getter
-@Setter
+@Data
 public class Branch extends BaseEntity {
 
     @Id
@@ -53,4 +53,24 @@ public class Branch extends BaseEntity {
 
     @Column(nullable = false, length = 50, name = "land_line")
     private String landLine;
+
+    public Branch() {}
+    public Branch(
+            final String name,
+            final String streetNo,
+            final String addressLine1,
+            final String landLine,
+            final String email,
+            final Province province,
+            final City city,
+            final String postalCode) {
+        this.name = name;
+        this.streetNo = streetNo;
+        this.addressLine1 = addressLine1;
+        this.landLine = landLine;
+        this.email = email;
+        this.province = province;
+        this.city = city;
+        this.postalCode = postalCode;
+    }
 }
