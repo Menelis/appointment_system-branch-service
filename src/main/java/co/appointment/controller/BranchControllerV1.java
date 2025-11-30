@@ -42,8 +42,9 @@ public class BranchControllerV1 {
     @GetMapping("/get-paginated-branches")
     public ResponseEntity<ApiResponse<Page<BranchDTO>>> getAllBranches(
                                                                  @RequestParam(name = SharedConstants.PAGE_NUMBER_PARAMETER_NAME, defaultValue = SharedConstants.PAGE_NUMBER_DEFAULT_VALUE) final int pageNumber,
-                                                                 @RequestParam(name = SharedConstants.PAGE_SIZE_PARAMETER_NAME, defaultValue = SharedConstants.PAGE_SIZE_DEFAULT_VALUE) final int pageSize) {
-        Page<BranchDTO> pagedBranches = branchService.getPagedBranches(pageNumber, pageSize);
+                                                                 @RequestParam(name = SharedConstants.PAGE_SIZE_PARAMETER_NAME, defaultValue = SharedConstants.PAGE_SIZE_DEFAULT_VALUE) final int pageSize,
+                                                                 @RequestParam(name = SharedConstants.SEARCH_TERM_PARAMETER_NAME, required = false) final String searchTerm) {
+        Page<BranchDTO> pagedBranches = branchService.getPagedBranches(pageNumber, pageSize, searchTerm);
 
         return ResponseEntity.ok(new ApiResponse<>(pagedBranches));
     }
