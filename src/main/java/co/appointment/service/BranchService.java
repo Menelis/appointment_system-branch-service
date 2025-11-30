@@ -6,14 +6,17 @@ import co.appointment.mapper.BranchToDTOMapper;
 import co.appointment.payload.request.NewBranchRequest;
 import co.appointment.payload.request.UpdateBranchRequest;
 import co.appointment.repository.BranchRepository;
+import co.appointment.repository.specification.BranchSpecifications;
 import co.appointment.shared.payload.response.ApiResponse;
 import co.appointment.shared.util.SharedObjectUtils;
-import co.appointment.util.ObjectUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,9 +41,20 @@ public class BranchService {
                 .map(branchToDTOMapper::toDTO)
                 .toList();
     }
+    private Page<Branch> getBranches(final int page, final int pageSize,
+                                     final String searchTerm) {
+        Pageable pageable = SharedObjectUtils.getPageable(page, pageSize);
+        if(!StringUtils.hasText(searchTerm)) {
+            return branchRepository.findAll(pageable);
+        }
+        Specification<Branch> branchSpecification = BranchSpecifications.nameContains(searchTerm)
+                .or(BranchSpecifications.streetNoContains(searchTerm));
+        return branchRepository.findAll(branchSpecification, pageable);
+    }
 
-    public Page<BranchDTO> getPagedBranches(final int page, final int pageSize) {
-        Page<Branch> branches = branchRepository.findAll(ObjectUtils.getPageable(page, pageSize));
+    public Page<BranchDTO> getPagedBranches(final int page, final int pageSize,
+                                            final String searchTerm) {
+        Page<Branch> branches = getBranches(page, pageSize, searchTerm);
 
         List<BranchDTO> content = branches.stream()
                 .map(branchToDTOMapper::toDTO)
