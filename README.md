@@ -10,6 +10,14 @@
       - 09:00 - 10:00
       - ..............
 - Services that require data from this service must be clients that make requests using [gRPC](https://grpc.io/) protocol.
+
+## Existing public Docker Image
+- There is an already existing public image you can use without building the new one if you not making code changes:
+  - Image - ```docker.io/menelismthembu12/appointment-branch-service```
+  - Tag - ```1.0.0```
+- The service allows config to be externalized using config-server.
+
+Config
 ```yaml
 infrastructure:
   DB:
