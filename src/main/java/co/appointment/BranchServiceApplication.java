@@ -9,15 +9,15 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 
+@SuppressWarnings({"HideUtilityClassConstructor"})
 @SpringBootApplication
 @EnableSpringDataWebSupport(pageSerializationMode = EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO)
 @ComponentScan(
-		excludeFilters = { @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = EncryptionService.class)})
-@EnableConfigurationProperties({ AppConfigProperties.class })
+        excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = EncryptionService.class)})
+@EnableConfigurationProperties({AppConfigProperties.class})
 public class BranchServiceApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(BranchServiceApplication.class, args);
-	}
-
+    public static void main(final String[] args) {
+        SpringApplication.run(BranchServiceApplication.class, args);
+    }
 }

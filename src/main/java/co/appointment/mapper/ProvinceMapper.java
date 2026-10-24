@@ -1,7 +1,5 @@
 package co.appointment.mapper;
 
-import co.appointment.entity.Province;
-import co.appointment.repository.ProvinceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -9,12 +7,15 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ProvinceMapper {
 
+    /*
     private final ProvinceRepository provinceRepository;
 
-    public Province fromId(Integer id) {
-        if(id == null) {
+    public Province fromId(final Integer id) {
+        if (id == null) {
             return null;
         }
         return provinceRepository.findById(id).orElse(null);
     }
+
+     */
 }

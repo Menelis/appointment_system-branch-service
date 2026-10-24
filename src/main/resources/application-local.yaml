@@ -10,21 +10,38 @@ spring:
     url: jdbc:postgresql://localhost:5432/appointment_branch_service_dev
     username: ${infrastructure.DB.USERNAME}
     password: ${infrastructure.DB.PASSWORD}
-  jpa:
-    hibernate:
-      ddl-auto: update
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://127.0.0.1:9000/oauth2/jwks
 springdoc:
   api-docs:
-    path: /branch/v3/api-docs
+    path: /branch-service/v3/api-docs
   swagger-ui:
-    path: /branch/swagger-ui.html
+    path: /branch-service/swagger-ui.html
     operations-sorter: method
     doc-expansion: none
 
 server:
   port: 9002
+app:
+  open-api:
+    info:
+      title: Appointment Branch Service
+      description: Appointment Branch Service
+      version: 1.0.0
+  white-list:
+    - "/branch-service/swagger-ui/**"
+    - "/branch-service/v3/api-docs/**"
+  admin-routes:
+    - "/api/v1/branch/admin/**"
+    - "/api/v1/province/admin/**"
+    - "/api/v1/city/admin/**"
+logging:
+  level:
+    root: info
+    org.flywaydb: trace
+grpc:
+  server:
+    port: 9091

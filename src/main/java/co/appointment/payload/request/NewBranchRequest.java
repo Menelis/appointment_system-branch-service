@@ -1,10 +1,10 @@
 package co.appointment.payload.request;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
@@ -16,7 +16,6 @@ public class NewBranchRequest {
     @Size(max = 100, message = "Only 100 characters allowed for branch name")
     private String name;
 
-
     @NotEmpty(message = "Street Number cannot be empty")
     @NotNull(message = "Street Number cannot be null")
     @NotBlank(message = "Street Number cannot be blank")
@@ -26,13 +25,11 @@ public class NewBranchRequest {
     @Size(max = 255, message = "Only 255 characters allowed for Address Line 1")
     private String addressLine1;
 
-
     @Size(max = 255, message = "Only 255 characters allowed for Address Line 2")
     private String addressLine2;
 
     @NotNull(message = "City cannot be null")
     private Integer cityId;
-
 
     @NotNull(message = "Province cannot be null")
     private Integer provinceId;

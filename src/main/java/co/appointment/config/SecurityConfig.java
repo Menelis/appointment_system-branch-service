@@ -21,33 +21,35 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final AppConfigProperties appConfigProperties;
+
     @Bean
     public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
-        return http
-                .cors(AbstractHttpConfigurer::disable)
+        return http.cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(this::setRequestMatchers)
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
                 .build();
     }
+
     private void setRequestMatchers(
-            final AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry requestMatcherRegistry) {
-        if(appConfigProperties.getWhiteList() != null && appConfigProperties.getWhiteList().length > 0 ) {
+            final AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry
+                    requestMatcherRegistry) {
+        if (appConfigProperties.getWhiteList() != null && appConfigProperties.getWhiteList().length > 0) {
             requestMatcherRegistry
                     .requestMatchers(appConfigProperties.getWhiteList())
                     .permitAll();
         }
-        if(appConfigProperties.getAdminRoutes() != null && appConfigProperties.getAdminRoutes().length > 0 ) {
+        if (appConfigProperties.getAdminRoutes() != null && appConfigProperties.getAdminRoutes().length > 0) {
             requestMatcherRegistry
                     .requestMatchers(appConfigProperties.getAdminRoutes())
                     .hasAnyRole(RoleConstants.ADMIN_ROLE, RoleConstants.USER_ROLE);
         }
         requestMatcherRegistry.anyRequest().authenticated();
     }
+
     @Bean
-    public JwtAuthenticationConverter jwtAuthenticationConverter(final AppConfigProperties appConfigProperties) {
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
         return SharedJwtUtils.convertJwtGrantedAuthorities(
-                appConfigProperties.getAuthoritiesClaimName(),
-                appConfigProperties.getAuthoritiesPrefix());
+                appConfigProperties.getAuthoritiesClaimName(), appConfigProperties.getAuthoritiesPrefix());
     }
 }

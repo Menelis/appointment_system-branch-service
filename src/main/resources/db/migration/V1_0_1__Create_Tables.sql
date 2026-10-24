@@ -1,0 +1,36 @@
+CREATE TABLE provinces
+(
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    version BIGINT NOT NULL DEFAULT 1,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE cities
+(
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    version BIGINT NOT NULL DEFAULT 1,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    name VARCHAR(100) NOT NULL,
+    province_id UUID NOT NULL REFERENCES provinces(id)
+);
+
+CREATE TABLE branch
+(
+    id UUID PRIMARY KEY,
+    version BIGINT NOT NULL DEFAULT 1,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    name VARCHAR(50) NOT NULL,
+    address_line1 VARCHAR(255) NOT NULL,
+    address_line2 VARCHAR(255) NOT NULL,
+    suburb VARCHAR(255) NOT NULL,
+    province_id UUID NOT NULL REFERENCES provinces(id),
+    city_id UUID NOT NULL REFERENCES cities(id),
+    postal_code VARCHAR(10) NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    fax_no VARCHAR(50) NOT NULL,
+    land_line VARCHAR(50) NOT NULL
+);
