@@ -1,4 +1,4 @@
-package co.appointment.service;
+package co.appointment.service.grp;
 
 import co.appointment.grpc.BranchServiceGrpc;
 import co.appointment.grpc.GetBranchByIdRequest;

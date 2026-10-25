@@ -1,76 +1,119 @@
 package co.appointment.service;
 
+import co.appointment.dto.BranchDto;
+import co.appointment.mapper.BranchMapper;
+import co.appointment.payload.request.CreateBranchRequest;
+import co.appointment.payload.request.UpdateBranchRequest;
+import co.appointment.persistence.BranchEntity;
+import co.appointment.persistence.BranchRepository;
+import co.appointment.shared.dto.ServiceResponseDto;
+import co.appointment.shared.exception.ServiceException;
+import co.appointment.shared.util.SharedObjectUtils;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class BranchService {
 
-    /*
     private final BranchRepository branchRepository;
-    private final BranchToDTOMapper branchToDTOMapper;
+    private final BranchMapper branchMapper;
 
-    public List<BranchDTO> getAllBranches() {
-        return branchRepository.findAll().stream().map(branchToDTOMapper::toDTO).toList();
-    }
+    public List<BranchDto> getAllBranches(final UUID xCorrelationId) {
 
-    public List<BranchDTO> getBranchesByProvinceId(final UUID provinceId, final UUID cityId) {
-        return this.branchRepository.findAllByProvinceIdAndCityId(provinceId, cityId).stream()
-                .map(branchToDTOMapper::toDTO)
-                .toList();
-    }
+        List<BranchEntity> branches = branchRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
 
-    private Page<Branch> getBranches(final int page, final int pageSize, final String searchTerm) {
-        Pageable pageable = SharedObjectUtils.getPageable(page, pageSize);
-        if (!StringUtils.hasText(searchTerm)) {
-            return branchRepository.findAll(pageable);
+        if (branches.isEmpty()) {
+            throw new ServiceException(HttpStatus.NO_CONTENT);
         }
-        Specification<Branch> branchSpecification =
-                BranchSpecifications.nameContains(searchTerm).or(BranchSpecifications.streetNoContains(searchTerm));
-        return branchRepository.findAll(branchSpecification, pageable);
+        return branches.stream().map(branchMapper::mapToDto).toList();
     }
 
-    public Page<BranchDTO> getPagedBranches(final int page, final int pageSize, final String searchTerm) {
-        Page<Branch> branches = getBranches(page, pageSize, searchTerm);
+    public List<BranchDto> getBranches(final UUID provinceId, final UUID cityId, final UUID xCorrelationId) {
 
-        List<BranchDTO> content =
-                branches.stream().map(branchToDTOMapper::toDTO).toList();
+        List<BranchEntity> branches = branchRepository.findAllByProvinceIdAndCityId(provinceId, cityId);
+
+        if (branches.isEmpty()) {
+            throw new ServiceException(HttpStatus.NO_CONTENT);
+        }
+
+        return branches.stream().map(branchMapper::mapToDto).toList();
+    }
+
+    public Page<BranchDto> getPagedBranches(
+            final int page, final int pageSize, final String searchTerm, final UUID xCorrelationId) {
+
+        Page<BranchEntity> branches = getBranches(page, pageSize, searchTerm);
+
+        if (branches.isEmpty()) {
+            throw new ServiceException(HttpStatus.NO_CONTENT);
+        }
+
+        List<BranchDto> content = branches.stream().map(branchMapper::mapToDto).toList();
 
         return new PageImpl<>(content, branches.getPageable(), branches.getTotalElements());
     }
 
-    public Optional<BranchDTO> getBranchById(final int id) {
-        Optional<Branch> optionalBranch = branchRepository.findById(id);
+    private Page<BranchEntity> getBranches(final int page, final int pageSize, final String searchTerm) {
+        Pageable pageable = SharedObjectUtils.getPageable(page, pageSize);
+        if (!StringUtils.hasText(searchTerm)) {
+            return branchRepository.findAll(pageable);
+        }
+        return branchRepository.findAll(pageable);
+    }
+
+    public Optional<BranchDto> getBranchById(final UUID id, final UUID xCorrelationId) {
+        Optional<BranchEntity> optionalBranch = branchRepository.findById(id);
         if (optionalBranch.isEmpty()) {
             throw new ServiceException(HttpStatus.NO_CONTENT);
         }
-        return Optional.of(branchToDTOMapper.toDTO(optionalBranch.get()));
+        return Optional.of(branchMapper.mapToDto(optionalBranch.get()));
     }
 
-    public void createBranch(final NewBranchRequest branchRequest, final UUID correlationId) {
-        branchRepository.save(branchToDTOMapper.toEntity(branchRequest));
+    public ServiceResponseDto createBranch(final CreateBranchRequest branchRequest, final UUID xCorrelationId) {
+        branchRepository.save(branchMapper.mapToEntity(branchRequest));
+
+        return ServiceResponseDto.builder()
+                .success(true)
+                .correlationId(xCorrelationId)
+                .build();
     }
 
-    public void updateBranch(final int id, final UpdateBranchRequest branchRequest, final UUID correlationId) {
+    public ServiceResponseDto updateBranch(
+            final UUID id, final UpdateBranchRequest branchRequest, final UUID xCorrelationId) {
 
-        Optional<Branch> optionalBranch = branchRepository.findById(id);
-        if (optionalBranch.isEmpty()) {
+        Optional<BranchEntity> branch = branchRepository.findById(id);
+        if (branch.isEmpty()) {
             throw new ServiceException(HttpStatus.NO_CONTENT);
         }
-        Branch branch = branchToDTOMapper.toEntity(branchRequest);
-        branchRepository.save(branch);
+        branchRepository.save(branchMapper.mapToEntity(branchRequest));
+
+        return ServiceResponseDto.builder()
+                .success(true)
+                .correlationId(xCorrelationId)
+                .build();
     }
 
-    public void deleteBranch(final int id) {
-        Optional<Branch> optionalBranch = branchRepository.findById(id);
+    public ServiceResponseDto deleteBranch(final UUID id, final UUID xCorrelationId) {
+        Optional<BranchEntity> optionalBranch = branchRepository.findById(id);
         if (optionalBranch.isEmpty()) {
             throw new ServiceException(HttpStatus.NO_CONTENT);
         }
         branchRepository.delete(optionalBranch.get());
+        return ServiceResponseDto.builder()
+                .success(true)
+                .correlationId(xCorrelationId)
+                .build();
     }
-
-     */
 }

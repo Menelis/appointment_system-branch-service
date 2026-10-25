@@ -1,10 +1,11 @@
 package co.appointment.dto;
 
+import java.util.UUID;
 import lombok.Data;
 
 @Data
-public class BranchDTO {
-    private int id;
+public class BranchDto {
+    private UUID id;
     private String name;
     private String streetNo;
     private String addressLine1;

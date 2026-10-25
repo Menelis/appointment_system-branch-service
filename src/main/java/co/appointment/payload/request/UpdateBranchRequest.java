@@ -1,15 +1,14 @@
 package co.appointment.payload.request;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class UpdateBranchRequest extends NewBranchRequest {
+public class UpdateBranchRequest extends CreateBranchRequest {
 
-    @NotBlank(message = "Branch Id cannot be blank")
-    @NotEmpty(message = "Branch Id cannot be empty")
-    private Integer id;
+    @NotNull(message = "Branch Id cannot be null")
+    private UUID id;
 }

@@ -1,21 +1,12 @@
 package co.appointment.mapper;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import co.appointment.dto.ProvinceDTO;
+import co.appointment.persistence.ProvinceEntity;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
 
-@Component
-@RequiredArgsConstructor
-public class ProvinceMapper {
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public interface ProvinceMapper {
 
-    /*
-    private final ProvinceRepository provinceRepository;
-
-    public Province fromId(final Integer id) {
-        if (id == null) {
-            return null;
-        }
-        return provinceRepository.findById(id).orElse(null);
-    }
-
-     */
+    ProvinceDTO mapToDto(ProvinceEntity province);
 }
