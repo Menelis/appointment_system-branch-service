@@ -34,10 +34,6 @@ app:
   white-list:
     - "/branch-service/swagger-ui/**"
     - "/branch-service/v3/api-docs/**"
-    - "/api/v1/provinces"
-    - "/api/v1/cities"
-    - "/api/v1/branches/admin"
-    - "/api/v1/branches"
   admin-routes:
     - "/api/v1/branch/admin/**"
     - "/api/v1/province/admin/**"
@@ -47,6 +43,7 @@ logging:
     root: info
     org.flywaydb: trace
     org.springframework.jdbc: trace
+    co.appointment.service: trace
 grpc:
   server:
     port: 9091

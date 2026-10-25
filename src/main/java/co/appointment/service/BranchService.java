@@ -93,11 +93,15 @@ public class BranchService {
     public ServiceResponseDto updateBranch(
             final UUID id, final UpdateBranchRequest branchRequest, final UUID xCorrelationId) {
 
-        Optional<BranchEntity> branch = branchRepository.findById(id);
-        if (branch.isEmpty()) {
-            throw new ServiceException(HttpStatus.NO_CONTENT);
+        BranchEntity existingBranch =
+                branchRepository.findById(id).orElseThrow(() -> new ServiceException(HttpStatus.NO_CONTENT));
+
+        branchMapper.updateEntityFromRequest(branchRequest, existingBranch);
+
+        if (log.isTraceEnabled()) {
+            log.trace("Branch updated=[{}]", existingBranch);
         }
-        branchRepository.save(branchMapper.mapToEntity(branchRequest));
+        branchRepository.save(existingBranch);
 
         return ServiceResponseDto.builder()
                 .success(true)

@@ -33,12 +33,12 @@ public class BranchEntity {
     private Long version;
 
     private String name;
-    private String addressLine1;
-    private String addressLine2;
-    private String suburb;
-    private UUID cityId;
-    private UUID provinceId;
-    private String postalCode;
+    private String physicalAddressLine1;
+    private String physicalAddressLine2;
+    private String physicalSuburb;
+    private UUID physicalCityId;
+    private UUID physicalProvinceId;
+    private String physicalPostalCode;
     private String email;
     private String faxNo;
     private String landLine;

@@ -1,18 +1,19 @@
 package co.appointment.dto;
 
 import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class BranchDto {
     private UUID id;
     private String name;
-    private String streetNo;
-    private String addressLine1;
-    private String addressLine2;
-    private CityDTO city;
-    private ProvinceDTO province;
-    private String postalCode;
+    private Address physicalAddress;
     private String email;
     private String faxNo;
     private String landLine;
