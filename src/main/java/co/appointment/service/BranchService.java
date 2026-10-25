@@ -1,96 +1,123 @@
 package co.appointment.service;
 
-import co.appointment.dto.BranchDTO;
-import co.appointment.entity.Branch;
-import co.appointment.mapper.BranchToDTOMapper;
-import co.appointment.payload.request.NewBranchRequest;
+import co.appointment.dto.BranchDto;
+import co.appointment.mapper.BranchMapper;
+import co.appointment.payload.request.CreateBranchRequest;
 import co.appointment.payload.request.UpdateBranchRequest;
-import co.appointment.repository.BranchRepository;
-import co.appointment.repository.specification.BranchSpecifications;
-import co.appointment.shared.payload.response.ApiResponse;
+import co.appointment.persistence.BranchEntity;
+import co.appointment.persistence.BranchRepository;
+import co.appointment.shared.dto.ServiceResponseDto;
+import co.appointment.shared.exception.ServiceException;
 import co.appointment.shared.util.SharedObjectUtils;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BranchService {
 
     private final BranchRepository branchRepository;
-    private final BranchToDTOMapper branchToDTOMapper;
+    private final BranchMapper branchMapper;
 
-    public List<BranchDTO> getAllBranches() {
-        return branchRepository.findAll()
-                .stream()
-                .map(branchToDTOMapper::toDTO)
-                .toList();
-    }
-    public List<BranchDTO> getBranchesByProvinceId(final int provinceId,
-                                                   final int cityId) {
-        return this.branchRepository.findAllByProvinceIdAndCityId(provinceId, cityId)
-                .stream()
-                .map(branchToDTOMapper::toDTO)
-                .toList();
-    }
-    private Page<Branch> getBranches(final int page, final int pageSize,
-                                     final String searchTerm) {
-        Pageable pageable = SharedObjectUtils.getPageable(page, pageSize);
-        if(!StringUtils.hasText(searchTerm)) {
-            return branchRepository.findAll(pageable);
+    public List<BranchDto> getAllBranches(final UUID xCorrelationId) {
+
+        List<BranchEntity> branches = branchRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
+
+        if (branches.isEmpty()) {
+            throw new ServiceException(HttpStatus.NO_CONTENT);
         }
-        Specification<Branch> branchSpecification = BranchSpecifications.nameContains(searchTerm)
-                .or(BranchSpecifications.streetNoContains(searchTerm));
-        return branchRepository.findAll(branchSpecification, pageable);
+        return branches.stream().map(branchMapper::mapToDto).toList();
     }
 
-    public Page<BranchDTO> getPagedBranches(final int page, final int pageSize,
-                                            final String searchTerm) {
-        Page<Branch> branches = getBranches(page, pageSize, searchTerm);
+    public List<BranchDto> getBranches(final UUID provinceId, final UUID cityId, final UUID xCorrelationId) {
 
-        List<BranchDTO> content = branches.stream()
-                .map(branchToDTOMapper::toDTO)
-                .toList();
+        List<BranchEntity> branches = branchRepository.findAllByProvinceIdAndCityId(provinceId, cityId);
+
+        if (branches.isEmpty()) {
+            throw new ServiceException(HttpStatus.NO_CONTENT);
+        }
+
+        return branches.stream().map(branchMapper::mapToDto).toList();
+    }
+
+    public Page<BranchDto> getPagedBranches(
+            final int page, final int pageSize, final String searchTerm, final UUID xCorrelationId) {
+
+        Page<BranchEntity> branches = getBranches(page, pageSize, searchTerm);
+
+        if (branches.isEmpty()) {
+            throw new ServiceException(HttpStatus.NO_CONTENT);
+        }
+
+        List<BranchDto> content = branches.stream().map(branchMapper::mapToDto).toList();
 
         return new PageImpl<>(content, branches.getPageable(), branches.getTotalElements());
     }
-    public ResponseEntity<ApiResponse<BranchDTO>> getBranchById(final int id) {
-        Optional<Branch> optionalBranch = branchRepository.findById(id);
-        return optionalBranch
-                .map(branch -> ResponseEntity.ok(new ApiResponse<>(branchToDTOMapper.toDTO(branch))))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+
+    private Page<BranchEntity> getBranches(final int page, final int pageSize, final String searchTerm) {
+        Pageable pageable = SharedObjectUtils.getPageable(page, pageSize);
+        if (!StringUtils.hasText(searchTerm)) {
+            return branchRepository.findAll(pageable);
+        }
+        return branchRepository.findAll(pageable);
     }
-    public BranchDTO createBranch(final NewBranchRequest branchRequest) {
-        Branch newBranch = branchToDTOMapper.toEntity(branchRequest);
-        return branchToDTOMapper.toDTO(branchRepository.save(newBranch));
+
+    public Optional<BranchDto> getBranchById(final UUID id, final UUID xCorrelationId) {
+        Optional<BranchEntity> optionalBranch = branchRepository.findById(id);
+        if (optionalBranch.isEmpty()) {
+            throw new ServiceException(HttpStatus.NO_CONTENT);
+        }
+        return Optional.of(branchMapper.mapToDto(optionalBranch.get()));
     }
-    public ResponseEntity<ApiResponse<BranchDTO>> updateBranch(final int id, final UpdateBranchRequest branchRequest) {
-       if(id != branchRequest.getId()) {
-           return ResponseEntity.badRequest().body(new ApiResponse<>("id mismatch"));
-       }
-       Optional<Branch> optionalBranch = branchRepository.findById(id);
-       if(optionalBranch.isEmpty()) {
-           return ResponseEntity.notFound().build();
-       }
-       Branch branch = branchToDTOMapper.toEntity(branchRequest);
-        SharedObjectUtils.mapAuditFields(branch, optionalBranch.get());
-       branchRepository.save(branch);
-       return ResponseEntity.ok().body(new ApiResponse<>(true, "Branch updated successfully"));
+
+    public ServiceResponseDto createBranch(final CreateBranchRequest branchRequest, final UUID xCorrelationId) {
+        branchRepository.save(branchMapper.mapToEntity(branchRequest));
+
+        return ServiceResponseDto.builder()
+                .success(true)
+                .correlationId(xCorrelationId)
+                .build();
     }
-    public ResponseEntity<ApiResponse<Void>> deleteBranch(final int id) {
-        Optional<Branch> optionalBranch = branchRepository.findById(id);
-        if(optionalBranch.isEmpty()) {
-            return ResponseEntity.notFound().build();
+
+    public ServiceResponseDto updateBranch(
+            final UUID id, final UpdateBranchRequest branchRequest, final UUID xCorrelationId) {
+
+        BranchEntity existingBranch =
+                branchRepository.findById(id).orElseThrow(() -> new ServiceException(HttpStatus.NO_CONTENT));
+
+        branchMapper.updateEntityFromRequest(branchRequest, existingBranch);
+
+        if (log.isTraceEnabled()) {
+            log.trace("Branch updated=[{}]", existingBranch);
+        }
+        branchRepository.save(existingBranch);
+
+        return ServiceResponseDto.builder()
+                .success(true)
+                .correlationId(xCorrelationId)
+                .build();
+    }
+
+    public ServiceResponseDto deleteBranch(final UUID id, final UUID xCorrelationId) {
+        Optional<BranchEntity> optionalBranch = branchRepository.findById(id);
+        if (optionalBranch.isEmpty()) {
+            throw new ServiceException(HttpStatus.NO_CONTENT);
         }
         branchRepository.delete(optionalBranch.get());
-        return ResponseEntity.noContent().build();
+        return ServiceResponseDto.builder()
+                .success(true)
+                .correlationId(xCorrelationId)
+                .build();
     }
 }

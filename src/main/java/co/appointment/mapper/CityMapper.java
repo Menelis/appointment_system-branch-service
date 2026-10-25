@@ -1,19 +1,12 @@
 package co.appointment.mapper;
 
-import co.appointment.entity.City;
-import co.appointment.repository.CityRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import co.appointment.dto.CityDTO;
+import co.appointment.persistence.CityEntity;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
 
-@Component
-@RequiredArgsConstructor
-public class CityMapper {
-    private final CityRepository cityRepository;
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public interface CityMapper {
 
-    public City fromId(final Integer id) {
-        if(id == null) {
-            return null;
-        }
-        return cityRepository.findById(id).orElse(null);
-    }
+    CityDTO mapToDto(CityEntity city);
 }
