@@ -42,7 +42,7 @@ public class SecurityConfig {
         if (appConfigProperties.getAdminRoutes() != null && appConfigProperties.getAdminRoutes().length > 0) {
             requestMatcherRegistry
                     .requestMatchers(appConfigProperties.getAdminRoutes())
-                    .hasAnyRole(RoleConstants.ADMIN_ROLE, RoleConstants.USER_ROLE);
+                    .hasAnyRole(RoleConstants.ADMIN_ROLE, RoleConstants.TELLER_ROLE);
         }
         requestMatcherRegistry.anyRequest().authenticated();
     }

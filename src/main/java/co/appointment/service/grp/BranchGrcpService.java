@@ -9,7 +9,7 @@ import co.appointment.shared.record.BranchSummary;
 import io.grpc.stub.StreamObserver;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import net.devh.boot.grpc.server.service.GrpcService;
+import org.springframework.grpc.server.service.GrpcService;
 
 @GrpcService
 @RequiredArgsConstructor

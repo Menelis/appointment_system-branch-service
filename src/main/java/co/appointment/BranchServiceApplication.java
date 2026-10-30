@@ -1,12 +1,9 @@
 package co.appointment;
 
 import co.appointment.config.AppConfigProperties;
-import co.appointment.shared.service.EncryptionService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.data.jdbc.repository.config.EnableJdbcAuditing;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 
@@ -14,12 +11,13 @@ import org.springframework.data.web.config.EnableSpringDataWebSupport;
 @SpringBootApplication
 @EnableSpringDataWebSupport(pageSerializationMode = EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO)
 @EnableJdbcAuditing
-@ComponentScan(
-        excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = EncryptionService.class)})
+// @ComponentScan(
+//        excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes =
+// EncryptionService.class)})
 @EnableConfigurationProperties({AppConfigProperties.class})
 public class BranchServiceApplication {
 
-    public static void main(final String[] args) {
+    static void main(final String[] args) {
         SpringApplication.run(BranchServiceApplication.class, args);
     }
 }
