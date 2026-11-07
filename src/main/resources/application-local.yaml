@@ -3,9 +3,14 @@ infrastructure:
     USERNAME: appointment_service_user
     PASSWORD: appointment_service_user
 spring:
+  grpc:
+    server:
+      port: 9091
+
   cloud:
     config:
       enabled: false
+
   datasource:
     url: jdbc:postgresql://localhost:5432/appointment_branch_service_dev
     username: ${infrastructure.DB.USERNAME}
@@ -38,12 +43,13 @@ app:
     - "/api/v1/branch/admin/**"
     - "/api/v1/province/admin/**"
     - "/api/v1/city/admin/**"
+
 logging:
   level:
     root: info
-    org.flywaydb: trace
-    org.springframework.jdbc: trace
-    co.appointment.service: trace
-grpc:
-  server:
-    port: 9091
+    co.appointment: trace
+    org.springframework.jdbc.core.JdbcTemplate: trace
+    org.springframework.jdbc.core.StatementCreatorUtils: TRACE
+    #org.springframework.grpc: trace
+    #io.grpc: trace
+    #io.netty: trace
