@@ -50,6 +50,11 @@ logging:
     co.appointment: trace
     org.springframework.jdbc.core.JdbcTemplate: trace
     org.springframework.jdbc.core.StatementCreatorUtils: TRACE
-    #org.springframework.grpc: trace
-    #io.grpc: trace
-    #io.netty: trace
+
+    org.springframework.grpc: TRACE
+    org.springframework.grpc.client: TRACE
+
+    # Underlying gRPC Java Channels, Name Resolvers & Load Balancers
+    io.grpc: TRACE
+    io.grpc.Channel: TRACE
+    io.grpc.netty: TRACE
