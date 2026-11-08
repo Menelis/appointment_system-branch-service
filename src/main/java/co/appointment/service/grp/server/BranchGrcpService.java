@@ -1,4 +1,4 @@
-package co.appointment.service.grp;
+package co.appointment.service.grp.server;
 
 import co.appointment.grpc.Address;
 import co.appointment.grpc.BranchServiceGrpc;

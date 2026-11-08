@@ -32,18 +32,18 @@ public interface BranchRepository
     List<BranchEntity> findAllByProvinceIdAndCityId(UUID provinceId, UUID cityId);
 
     @Query("""
-         SELECT name,
+         SELECT b.name,
                 physical_address_line1 AS address_Line1,
-                physical_address_line2 AS address_Line1,
-                physical_suburb,
+                physical_address_line2 AS address_Line2,
+                physical_suburb as suburb,
                 p.name as province,
                 c.name as city,
                 physical_postal_code as postal_code,
                 email,
                 fax_no,
                 land_line
-        FROM branches b INNER JOIN province p ON B.physical_province_id = p.id
-                        INNER JOIN city c ON b.physical_city_id = c.id
+        FROM branches b INNER JOIN provinces p ON B.physical_province_id = p.id
+                        INNER JOIN cities c ON b.physical_city_id = c.id
          WHERE b.id = :id
 """)
     Optional<BranchSummary> getBranchSummary(UUID id);
