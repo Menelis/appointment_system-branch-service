@@ -4,6 +4,8 @@ import co.appointment.shared.record.BranchSummary;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.ListPagingAndSortingRepository;
@@ -47,4 +49,6 @@ public interface BranchRepository
          WHERE b.id = :id
 """)
     Optional<BranchSummary> getBranchSummary(UUID id);
+
+    Page<BranchEntity> findByNameContainingIgnoreCase(String name, Pageable pageable);
 }

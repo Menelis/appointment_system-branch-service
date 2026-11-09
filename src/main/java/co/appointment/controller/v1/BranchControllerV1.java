@@ -1,12 +1,16 @@
 package co.appointment.controller.v1;
 
+import static co.appointment.shared.constant.SharedConstants.PAGE_NUMBER_DEFAULT_VALUE;
+import static co.appointment.shared.constant.SharedConstants.PAGE_NUMBER_PARAMETER_NAME;
+import static co.appointment.shared.constant.SharedConstants.PAGE_SIZE_DEFAULT_VALUE;
+import static co.appointment.shared.constant.SharedConstants.PAGE_SIZE_PARAMETER_NAME;
+import static co.appointment.shared.constant.SharedConstants.SEARCH_TERM_PARAMETER_NAME;
 import static co.appointment.shared.constant.SharedConstants.X_CORRELATION_ID;
 
 import co.appointment.dto.BranchDto;
 import co.appointment.payload.request.CreateBranchRequest;
 import co.appointment.payload.request.UpdateBranchRequest;
 import co.appointment.service.BranchService;
-import co.appointment.shared.constant.SharedConstants;
 import co.appointment.shared.dto.ServiceResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -41,27 +45,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class BranchControllerV1 {
 
     private final BranchService branchService;
-
-    @Operation(summary = "Get branches", description = "Retrieves a list of branches")
-    @ApiResponses(
-            value = {
-                @ApiResponse(
-                        responseCode = "200",
-                        description = "Successfully retrieved list of branches",
-                        content = @Content(array = @ArraySchema(schema = @Schema(implementation = BranchDto.class)))),
-                @ApiResponse(responseCode = "204", description = "No branches found", content = @Content),
-                @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
-                @ApiResponse(responseCode = "403", description = "Insufficient permissions", content = @Content),
-                @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)
-            })
-    @GetMapping
-    public ResponseEntity<List<BranchDto>> getAllBranches(
-            @RequestHeader(name = X_CORRELATION_ID) final UUID xCorrelationId) {
-
-        List<BranchDto> branches = branchService.getAllBranches(xCorrelationId);
-
-        return ResponseEntity.ok(branches);
-    }
 
     @Operation(
             summary = "Get branches by province ID(UUID) and city ID(UUID)",
@@ -107,21 +90,26 @@ public class BranchControllerV1 {
             })
     @GetMapping("/search")
     public ResponseEntity<Page<BranchDto>> getAllBranches(
-            @RequestParam(
-                            name = SharedConstants.PAGE_NUMBER_PARAMETER_NAME,
-                            defaultValue = SharedConstants.PAGE_NUMBER_DEFAULT_VALUE)
-                    final int pageNumber,
-            @RequestParam(
-                            name = SharedConstants.PAGE_SIZE_PARAMETER_NAME,
-                            defaultValue = SharedConstants.PAGE_SIZE_DEFAULT_VALUE)
+            @RequestParam(name = PAGE_NUMBER_PARAMETER_NAME, defaultValue = PAGE_NUMBER_DEFAULT_VALUE)
+                    @Parameter(description = "Page Number", required = true, example = PAGE_NUMBER_DEFAULT_VALUE)
+                    final int pageNo,
+            @RequestParam(name = PAGE_SIZE_PARAMETER_NAME, defaultValue = PAGE_SIZE_DEFAULT_VALUE)
+                    @Parameter(
+                            description = "The number of items to return per page",
+                            required = true,
+                            example = PAGE_SIZE_DEFAULT_VALUE)
                     final int pageSize,
-            @RequestParam(name = SharedConstants.SEARCH_TERM_PARAMETER_NAME, required = false) final String searchTerm,
+            @RequestParam(name = SEARCH_TERM_PARAMETER_NAME, required = false)
+                    @Parameter(description = "Optional search query to filter results by name", example = "Gauteng")
+                    final String searchTerm,
             @RequestHeader(name = X_CORRELATION_ID)
-                    @Parameter(description = "Correlation ID for request tracing", required = true)
+                    @Parameter(
+                            description = "Correlation ID for request tracing",
+                            required = true,
+                            example = "550e8400-e29b-41d4-a716-446655440000")
                     final UUID xCorrelationId) {
 
-        Page<BranchDto> pagedBranches =
-                branchService.getPagedBranches(pageNumber, pageSize, searchTerm, xCorrelationId);
+        Page<BranchDto> pagedBranches = branchService.getPagedBranches(pageNo, pageSize, searchTerm, xCorrelationId);
 
         return ResponseEntity.ok(pagedBranches);
     }
