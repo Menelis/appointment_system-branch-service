@@ -30,16 +30,6 @@ public class BranchService {
     private final BranchRepository branchRepository;
     private final BranchMapper branchMapper;
 
-    public List<BranchDto> getAllBranches(final UUID xCorrelationId) {
-
-        List<BranchEntity> branches = branchRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
-
-        if (branches.isEmpty()) {
-            throw new ServiceException(HttpStatus.NO_CONTENT);
-        }
-        return branches.stream().map(branchMapper::mapToDto).toList();
-    }
-
     public List<BranchDto> getBranches(final UUID provinceId, final UUID cityId, final UUID xCorrelationId) {
 
         List<BranchEntity> branches = branchRepository.findAllByProvinceIdAndCityId(provinceId, cityId);
@@ -54,23 +44,20 @@ public class BranchService {
     public Page<BranchDto> getPagedBranches(
             final int page, final int pageSize, final String searchTerm, final UUID xCorrelationId) {
 
-        Page<BranchEntity> branches = getBranches(page, pageSize, searchTerm);
-
+        Pageable pageable = SharedObjectUtils.getPageable(page, pageSize, Sort.by(Sort.Direction.ASC, "name"));
+        Page<BranchEntity> paginatedBranches;
+        if (StringUtils.hasText(searchTerm)) {
+            paginatedBranches = branchRepository.findByNameContainingIgnoreCase(searchTerm, pageable);
+        } else {
+            paginatedBranches = branchRepository.findAll(pageable);
+        }
+        List<BranchDto> branches = paginatedBranches.getContent().stream()
+                .map(branchMapper::mapToDto)
+                .toList();
         if (branches.isEmpty()) {
             throw new ServiceException(HttpStatus.NO_CONTENT);
         }
-
-        List<BranchDto> content = branches.stream().map(branchMapper::mapToDto).toList();
-
-        return new PageImpl<>(content, branches.getPageable(), branches.getTotalElements());
-    }
-
-    private Page<BranchEntity> getBranches(final int page, final int pageSize, final String searchTerm) {
-        Pageable pageable = SharedObjectUtils.getPageable(page, pageSize);
-        if (!StringUtils.hasText(searchTerm)) {
-            return branchRepository.findAll(pageable);
-        }
-        return branchRepository.findAll(pageable);
+        return new PageImpl<>(branches, pageable, paginatedBranches.getTotalElements());
     }
 
     public Optional<BranchDto> getBranchById(final UUID id, final UUID xCorrelationId) {
