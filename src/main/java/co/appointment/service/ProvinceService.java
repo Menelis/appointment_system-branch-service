@@ -24,6 +24,12 @@ public class ProvinceService {
     private final ProvinceRepository provinceRepository;
     private final ProvinceMapper provinceMapper;
 
+    public List<ProvinceDTO> getProvinces() {
+        return provinceRepository.findAll(Sort.by(Sort.Direction.ASC, "name")).stream()
+                .map(provinceMapper::mapToDto)
+                .toList();
+    }
+
     public Page<ProvinceDTO> getProvinces(
             final int pageNo, final int pageSize, final String searchTerm, final UUID xCorrelationId) {
         Pageable pageable = SharedObjectUtils.getPageable(pageNo, pageSize, Sort.by(Sort.Direction.ASC, "name"));

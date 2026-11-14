@@ -11,12 +11,18 @@ import lombok.Data;
 public class AddressDto {
 
     @Size(max = 255, message = "Only 255 characters allowed for Address Line 1")
+    @NotNull
+    @NotEmpty
     private String addressLine1;
 
     @Size(max = 255, message = "Only 255 characters allowed for Address Line 2")
+    @NotNull
+    @NotEmpty
     private String addressLine2;
 
     @Size(max = 50, message = "Only 50 characters allowed for Suburb")
+    @NotNull
+    @NotEmpty
     private String suburb;
 
     @NotNull(message = "CityId cannot be null")

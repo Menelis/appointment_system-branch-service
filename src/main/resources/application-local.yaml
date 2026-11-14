@@ -40,9 +40,7 @@ app:
     - "/branch-service/swagger-ui/**"
     - "/branch-service/v3/api-docs/**"
   admin-routes:
-    - "/api/v1/branch/admin/**"
-    - "/api/v1/province/admin/**"
-    - "/api/v1/city/admin/**"
+    - "/api/v1/admin/branches/**"
 
 logging:
   level:
